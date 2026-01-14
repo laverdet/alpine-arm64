@@ -1,0 +1,11 @@
+name: laverdet/alpine-arm64
+description: Fix GitHub Actions on Alpine Linux arm64
+
+runs:
+  using: composite
+  steps:
+    - shell: sh
+      if: ${{ runner.arch == 'ARM64' }}
+      run: |
+        cp libgcompat.so.0 ld-linux-aarch64.so.1 /lib/
+        sed -i "s:ID=alpine:ID=NotpineForGHA:" /etc/os-release

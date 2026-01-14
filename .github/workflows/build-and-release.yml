@@ -1,0 +1,47 @@
+name: Build & release
+on: [ push ]
+
+jobs:
+  make:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        shell: sh
+        run: |
+          set -eux
+          docker build \
+            --progress=plain \
+            --build-arg GCOMPAT_REF=refs/f5f4486c9ff90814cc7c7cec5030b47621d135b7 \
+            --build-arg NODE_VERSION=24.0.0 \
+            --tag gcompat \
+            .
+          CONTAINER=$(docker create gcompat /)
+          docker cp $CONTAINER:/ld-linux-aarch64.so.1 ./
+          docker cp $CONTAINER:/libgcompat.so.0 ./
+          docker rm $CONTAINER
+
+      - name: Version
+        id: semver
+        if: github.ref == 'refs/heads/release'
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          branch: release
+
+      - shell: sh
+        if: github.ref == 'refs/heads/release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.semver.outputs.next }}
+          VERSION_MAJOR: ${{ steps.semver.outputs.nextMajor }}
+        run: |
+          set -eux
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ld-linux-aarch64.so.1 libgcompat.so.0
+          git commit -m "Artifacts for $VERSION"
+          git tag "$VERSION"
+          git push origin tag "$VERSION"
+          git tag -f "$VERSION_MAJOR"
+          git push origin tag -f "$VERSION_MAJOR"
