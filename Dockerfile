@@ -6,7 +6,7 @@ RUN <<DONE
   set -eux
   apk add build-base curl git
   curl --silent https://nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-arm64.tar.gz | tar xz
-  git clone https://git.adelielinux.org/adelie/gcompat.git
+  git clone https://github.com/laverdet/adelie-gcompat.git gcompat
   cd gcompat
   git checkout "$GCOMPAT_REF"
   cat ../gcompat.diff | git apply
