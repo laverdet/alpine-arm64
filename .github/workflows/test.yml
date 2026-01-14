@@ -1,0 +1,8 @@
+on: [push]
+jobs:
+  make:
+    runs-on: ubuntu-24.04-arm
+    container: alpine
+    steps:
+      - uses: laverdet/alpine-arm64@v1
+      - uses: actions/checkout@v4
