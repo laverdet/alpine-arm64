@@ -30,8 +30,6 @@ jobs:
         if: github.ref == 'refs/heads/release'
         uses: ietf-tools/semver-action@v1
         with:
-          noNewCommitBehavior: current
-          fallbackTag: 1.0.0
           token: ${{ github.token }}
           branch: release
 
@@ -47,7 +45,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add ld-linux-aarch64.so.1 libgcompat.so.0
           git commit -m "Artifacts for $VERSION"
-          git tag -f "$VERSION"
-          git push origin -f "$VERSION"
+          git tag "$VERSION"
+          git push origin "$VERSION"
           git tag -f "$VERSION_MAJOR"
           git push origin -f "$VERSION_MAJOR"
