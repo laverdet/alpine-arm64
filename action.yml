@@ -6,6 +6,7 @@ runs:
   steps:
     - shell: sh
       if: ${{ runner.arch == 'ARM64' }}
+      working-directory: ${{ github.action_path }}
       run: |
         cp libgcompat.so.0 ld-linux-aarch64.so.1 /lib/
         sed -i "s:ID=alpine:ID=NotpineForGHA:" /etc/os-release
