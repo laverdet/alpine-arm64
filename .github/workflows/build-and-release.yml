@@ -1,5 +1,8 @@
 name: Build & release
 on: [ push ]
+env:
+  GCOMPAT_REF: f5f4486c9ff90814cc7c7cec5030b47621d135b7
+  NODE_VERSION: 24.0.0
 
 jobs:
   make:
@@ -12,8 +15,8 @@ jobs:
           set -eux
           docker build \
             --progress=plain \
-            --build-arg GCOMPAT_REF=refs/f5f4486c9ff90814cc7c7cec5030b47621d135b7 \
-            --build-arg NODE_VERSION=24.0.0 \
+            --build-arg GCOMPAT_REF=$GCOMPAT_REF \
+            --build-arg NODE_VERSION=$NODE_VERSION \
             --tag gcompat \
             .
           CONTAINER=$(docker create gcompat /)
