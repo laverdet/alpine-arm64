@@ -45,6 +45,6 @@ jobs:
           git add ld-linux-aarch64.so.1 libgcompat.so.0
           git commit -m "Artifacts for $VERSION"
           git tag "$VERSION"
-          git push origin tag "$VERSION"
+          git push origin "$VERSION"
           git tag -f "$VERSION_MAJOR"
-          git push origin tag -f "$VERSION_MAJOR"
+          git push origin -f "$VERSION_MAJOR"
